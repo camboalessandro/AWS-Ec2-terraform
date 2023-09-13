@@ -29,7 +29,7 @@ resource "aws_security_group" "web" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["109.116.202.149/32"] # Sostituisci con il tuo indirizzo IP per l'accesso SSH
+    cidr_blocks = ["2.32.236.253/32"] # Sostituisci con il tuo indirizzo IP per l'accesso SSH
   }
   
   
@@ -42,7 +42,7 @@ resource "aws_security_group" "web" {
   
   egress {
     from_port   = 0
-    to_port     = 825
+    to_port     = 3128
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

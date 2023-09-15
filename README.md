@@ -15,11 +15,13 @@ After successfully installing Terraform and setting up an AWS account, you need 
 
 mathematicaCopy code
 
-`$ aws configure
+```
+aws configure
 AWS Access Key ID:(Write Your Access Key)  
 AWS Secret Access Key:(Write Your Secret Access Key)  
 Default region name [us-west-2]: us-west-2 (Write your region)  
-Default output format [None]: json (write your format)` 
+Default output format [None]: json (write your format)
+```
 
 Next, create a Terraform configuration file (`main.tf`) that defines the infrastructure you want to create. In this file, specify resources like EC2 instances, security groups, networks, etc., using the HashiCorp Configuration Language (HCL) syntax. To make your Terraform code flexible and parameterized, allowing you to easily customize resources based on your needs, it's advisable to create a `variables.tf` file.
 
@@ -62,14 +64,14 @@ resource "aws_security_group" "web" {
   }
   
   egress {
-    from_port   = 80
+    from_port   = 0
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   
   egress {
-    from_port   = 3128
+    from_port   = 0
     to_port     = 3128
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
@@ -91,9 +93,6 @@ resource "aws_instance" "instancePagoPa" {
   vpc_security_group_ids = [aws_security_group.web.id]
 }
 
-output "public_ip" { 
-	value = aws_eip.eipPagoPa.public_ip 
-	}
 ```
 
 ## variables(.tf) file

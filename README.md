@@ -13,7 +13,6 @@ Terraform module that provisions an EC2 instance on AWS.
 
 After successfully installing Terraform and setting up an AWS account, you need to configure AWS access credentials. To do this, run the `aws configure` command in your terminal. You should provide your access credentials (click on your name in the top-right corner of the AWS console and select "My Security Credentials"). In the "Access keys" section, you should see a list of your existing access keys. If this is your first time accessing it, create a new access key.
 
-mathematicaCopy code
 
 ```
 aws configure

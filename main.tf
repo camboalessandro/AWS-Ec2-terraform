@@ -1,14 +1,13 @@
-# Definisci il provider AWS
+# Define the AWS provider
 provider "aws" {
-  region = "us-east-1" # Cambia con la tua regione desiderata
+  region = var.aws_region
 }
 
-# Crea un gruppo di sicurezza per consentire il traffico in ingresso
+# Create a security group to allow incoming/outgoing traffic
 resource "aws_security_group" "web" {
   name        = "web"
   description = "Web Security Group"
-  
-  # Consenti il traffico HTTP e SSH in ingresso (personalizza secondo le tue esigenze)
+
   ingress {
     from_port   = 80
     to_port     = 80
@@ -17,27 +16,17 @@ resource "aws_security_group" "web" {
   }
   
   ingress {
-    from_port   = 80
+    from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   
-
-
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["2.32.236.253/32"] # Sostituisci con il tuo indirizzo IP per l'accesso SSH
-  }
-  
-  
-  egress {
-    from_port   = 0
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.ssh_cidr_block]
   }
   
   egress {
@@ -46,29 +35,19 @@ resource "aws_security_group" "web" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
-  
 }
 
-# Crea un indirizzo IP elastico
-resource "aws_eip" "example" {
-	instance = aws_instance.example.id
+# Create an Elastic IP address
+resource "aws_eip" "eipPagoPa" {
+  instance = aws_instance.instancePagoPa.id
 }
 
-# Avvia un'istanza EC2
-resource "aws_instance" "example" {
-  ami           = "ami-053b0d53c279acc90" # Sostituisci con l'AMI desiderato
-  instance_type = "t2.micro"               # Adatta alle tue esigenze
-  key_name      = "awsTFV"     # Sostituisci con la tua coppia di chiavi SSH
-
-  # Collega il gruppo di sicurezza e l'indirizzo IP elastico
+# Launch an EC2 instance
+resource "aws_instance" "instancePagoPa" {
+  ami           = var.instance_ami
+  instance_type = var.instance_type
+  key_name      = var.key_name
+  
+  # Associate the security group and the Elastic IP address
   vpc_security_group_ids = [aws_security_group.web.id]
-#  associate_public_ip_address = true
-
-  # Puoi aggiungere dati utente o provisioners qui per configurare il tuo microservizio
-}
-
-# Visualizza l'indirizzo IP pubblico
-output "public_ip" {
-  value = aws_instance.example.public_ip
 }

@@ -48,7 +48,7 @@ resource "aws_security_group" "web" {
   }
   
   ingress {
-    from_port   = 80
+    from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
@@ -62,14 +62,14 @@ resource "aws_security_group" "web" {
   }
   
   egress {
-    from_port   = 0
+    from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   
   egress {
-    from_port   = 0
+    from_port   = 3128
     to_port     = 3128
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
@@ -77,12 +77,12 @@ resource "aws_security_group" "web" {
 }
 
 # Create an Elastic IP address
-resource "aws_eip" "example" {
-  instance = aws_instance.example.id
+resource "aws_eip" "eipPagoPa" {
+  instance = aws_instance.instancePagoPa.id
 }
 
 # Launch an EC2 instance
-resource "aws_instance" "example" {
+resource "aws_instance" "instancePagoPa" {
   ami           = var.instance_ami
   instance_type = var.instance_type
   key_name      = var.key_name
@@ -92,7 +92,7 @@ resource "aws_instance" "example" {
 }
 
 output "public_ip" { 
-	value = aws_eip.example_eip.public_ip 
+	value = aws_eip.eipPagoPa.public_ip 
 	}
 ```
 
@@ -128,3 +128,24 @@ variable "ssh_cidr_block" {
   default     = "YOUR_IP_ADDRESS/32"
 }
 ```
+
+## Deployment of a Python microservice
+
+After creating the EC2 instance, we deploy a simple Python service.
+
+1. Connect to the machine via SSH: `ssh -i KEY.pem ubuntu@ELASTIC_IP`.
+2. Run `sudo apt-get update`.
+3. Install Python 3 and pip: `sudo apt install python3-pip`.
+4. Install Flask: `pip3 install Flask`.
+5. Create a Python file: `touch ms.py`.
+6. Paste the code below into `ms.py`:
+   ```python
+   from flask import Flask
+   app = Flask(__name__)
+   @app.route('/')
+   def hello_world():
+       return 'Hello World!'
+   if __name__ == '__main__':
+       app.run(host='0.0.0.0', port=8080)
+   ```
+7. Send a GET request to receive the response. 😉

@@ -94,7 +94,7 @@ resource "aws_instance" "instancePagoPa" {
 
 ```
 
-## variables(.tf) file
+## variables\.tf file
 ```
 variable "aws_region" {
   description = "The AWS region in which to create the resources"

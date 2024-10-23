@@ -29,7 +29,7 @@ Navigate to the directory containing your Terraform configuration files and run 
 Run the `terraform apply` command to create or modify resources in the cloud environment. Terraform will ask for confirmation before proceeding.
 
 To delete the created resources, run the `terraform destroy` command.
-## main(.tf) file
+## main\.tf file
 ```
 # Define the AWS provider
 provider "aws" {
